@@ -4,6 +4,8 @@ import (
 	"flag"
 	"fmt"
 	"os"
+
+	"github.com/boreec/repo-downloader/fetcher"
 )
 
 func main() {
@@ -13,5 +15,10 @@ func main() {
 		flag.PrintDefaults()
 		os.Exit(1)
 	}
-	fmt.Println("hello word!")
+
+	err := fetcher.DownloadRepositories(flag.Arg(0))
+	if err != nil {
+		fmt.Println(err.Error())
+		os.Exit(1)
+	}
 }
