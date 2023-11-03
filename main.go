@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"log/slog"
 	"os"
 
@@ -15,9 +14,9 @@ func main() {
 	flag.Parse()
 
 	if flag.NArg() < 1 {
-		fmt.Println("You must provide at least one string argument!")
+		slog.Error("At least one string argument is expected!")
 		flag.PrintDefaults()
-		return
+		os.Exit(1)
 	}
 
 	if *debug {
@@ -26,9 +25,10 @@ func main() {
 
 	err := fetcher.DownloadRepositories(flag.Arg(0))
 	if err != nil {
-		fmt.Println(err.Error())
-		return
+		slog.Error(err.Error())
+		os.Exit(1)
 	}
+	os.Exit(0)
 }
 
 func setLoggerLevelToDebug() {
