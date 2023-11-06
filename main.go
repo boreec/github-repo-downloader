@@ -17,6 +17,7 @@ const (
 func main() {
 	debug := flag.Bool("debug", false, "Show debugging messages")
 	dryRun := flag.Bool("dry-run", false, "Show fetched repository information")
+	outputDir := flag.String("output-directory", outputDirDefault, "Output directory for cloned repositories")
 
 	flag.Parse()
 
@@ -46,7 +47,7 @@ func main() {
 
 	if !*dryRun {
 		slog.Info("cloning repositories")
-		errs = repository.SaveRepositoriesLocally(targetsRepos, outputDirDefault)
+		errs = repository.SaveRepositoriesLocally(targetsRepos, *outputDir)
 		if len(errs) > 0 {
 			for _, err := range errs {
 				slog.Warn(err.Error())
