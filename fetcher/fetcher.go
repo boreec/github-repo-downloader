@@ -2,9 +2,9 @@ package fetcher
 
 import (
 	"log/slog"
-	"strings"
 
 	"github.com/boreec/repo-downloader/model"
+	"github.com/boreec/repo-downloader/utils"
 	"github.com/gocolly/colly"
 )
 
@@ -34,7 +34,7 @@ func FetchRepositoryUrls(url string) ([]model.Repository, error) {
 	var repos []model.Repository
 	collector.OnHTML("h3 a", func(e *colly.HTMLElement) {
 		repo := model.Repository{
-			Name: cleanString(e.Text),
+			Name: utils.SanitizeString(e.Text),
 			Url:  e.Attr("href"),
 		}
 		repos = append(repos, repo)
@@ -57,9 +57,4 @@ func FetchRepositoryUrls(url string) ([]model.Repository, error) {
 	}
 
 	return repos, nil
-}
-
-func cleanString(s string) string {
-	tmp := strings.ReplaceAll(s, " ", "")
-	return strings.ReplaceAll(tmp, "\n", "")
 }
