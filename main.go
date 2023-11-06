@@ -7,10 +7,12 @@ import (
 
 	"github.com/boreec/repo-downloader/fetcher"
 	"github.com/boreec/repo-downloader/logger"
+	"github.com/boreec/repo-downloader/repository"
 )
 
 func main() {
 	debug := flag.Bool("debug", false, "Show debugging messages")
+	dryRun := flag.Bool("dry-run", false, "Show fetched repository information")
 
 	flag.Parse()
 
@@ -36,6 +38,19 @@ func main() {
 		for _, repo := range targetRepos {
 			slog.Info("", slog.String("url", repo.Url), slog.String("name", repo.Name))
 		}
+	}
+
+	if !*dryRun {
+		slog.Info("cloning repositories")
+		errs = repository.SaveRepositoriesLocally(targetsRepos, "data")
+		if len(errs) > 0 {
+			for _, err := range errs {
+				slog.Warn(err.Error())
+			}
+		}
+
+	} else {
+		slog.Info("dry run, no cloning")
 	}
 
 	if len(errs) > 0 {

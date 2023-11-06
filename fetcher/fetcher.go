@@ -39,7 +39,7 @@ func FetchRepositoryUrls(url string) ([]model.Repository, error) {
 	collector.OnHTML("h3 a", func(e *colly.HTMLElement) {
 		repo := model.Repository{
 			Name: utils.SanitizeString(e.Text),
-			Url:  e.Attr("href"),
+			Url:  "https://github.com" + e.Attr("href"),
 		}
 		repos = append(repos, repo)
 	})
