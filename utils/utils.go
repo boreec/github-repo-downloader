@@ -5,12 +5,22 @@ import (
 	"strings"
 )
 
-// remove all whitespaces and newline characters from a given string
+// Remove all whitespaces and newline characters from a given string.
 func SanitizeString(s string) string {
 	return strings.ReplaceAll(strings.ReplaceAll(s, " ", ""), "\n", "")
 }
 
-func DetermineTargetUrl(target string) (string, error) {
+// Determine the appropriate url to use for a target, depending if it is an
+// user or an organization.
+//
+// Parameters:
+//   - target: the profile from which repositories are going to fetched. It
+//   it must follow the format `org:organization-name` or `user:user-name`.
+//
+// Returns:
+//   - url: the target's url for fetching repositories.
+//   - err: an errory, if any, that occured during the process.
+func DetermineTargetUrl(target string) (url string, err error) {
 	errWrongFromat := fmt.Errorf(
 		"target '%s' is wrong format, it must be either '%s' or '%s'",
 		target,
