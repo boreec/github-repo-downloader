@@ -29,3 +29,10 @@ without actually cloning them:
 ```sh
 ./repo-downloader --dry-run user:octocat
 ```
+
+You can provide the flag `--debug` for displaying additional information
+regarding what is happening under the hood:
+
+```sh
+./repo-downloader --dry-run --debug user:octocat
+```
