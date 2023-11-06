@@ -5,6 +5,7 @@ import (
 	"os"
 )
 
+// Set the global slog logger to log all messages at or above the debug level.
 func SetLoggerLevelToDebug() {
 	textHandler := slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
 		Level: slog.LevelDebug,
