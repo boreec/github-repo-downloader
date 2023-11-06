@@ -13,7 +13,11 @@ func FetchAll(targets []string) (map[string][]model.Repository, []error) {
 	var targetRepos map[string][]model.Repository = make(map[string][]model.Repository)
 
 	for _, target := range targets {
-		targetUrl := "https://github.com/" + target + "?tab=repositories"
+		targetUrl, err := utils.DetermineTargetUrl(target)
+		if err != nil {
+			errs = append(errs, err)
+			continue
+		}
 		repo, err := FetchRepositoryUrls(targetUrl)
 		if err != nil {
 			errs = append(errs, err)
