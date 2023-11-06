@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/boreec/repo-downloader/fetcher"
+	"github.com/boreec/repo-downloader/logger"
 )
 
 func main() {
@@ -20,21 +21,25 @@ func main() {
 	}
 
 	if *debug {
-		setLoggerLevelToDebug()
+		logger.SetLoggerLevelToDebug()
 	}
 
-	err := fetcher.DownloadRepositories(flag.Arg(0))
-	if err != nil {
-		slog.Error(err.Error())
+	targetsRepos, errs := fetcher.FetchAll(flag.Args())
+	if len(errs) > 0 {
+		for _, err := range errs {
+			slog.Warn(err.Error())
+		}
+	}
+
+	for target, targetRepos := range targetsRepos {
+		slog.Info("list of repositories found", slog.String("target", target))
+		for _, repo := range targetRepos {
+			slog.Info("", slog.String("url", repo.Url), slog.String("name", repo.Name))
+		}
+	}
+
+	if len(errs) > 0 {
 		os.Exit(1)
 	}
 	os.Exit(0)
-}
-
-func setLoggerLevelToDebug() {
-	textHandler := slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
-		Level: slog.LevelDebug,
-	})
-	logger := slog.New(textHandler)
-	slog.SetDefault(logger)
 }

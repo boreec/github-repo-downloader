@@ -1,36 +1,41 @@
 package fetcher
 
 import (
-	"fmt"
-	"github.com/gocolly/colly"
 	"log/slog"
+	"strings"
+
+	"github.com/boreec/repo-downloader/model"
+	"github.com/gocolly/colly"
 )
 
-type Repository struct {
-	url string
-}
+func FetchAll(targets []string) (map[string][]model.Repository, []error) {
+	var errs []error
+	var targetRepos map[string][]model.Repository = make(map[string][]model.Repository)
 
-func DownloadRepositories(username string) error {
-	url := "https://github.com/" + username + "?tab=repositories"
-	repositories, err := fetchRepositories(url)
-	if err != nil {
-		return err
+	for _, target := range targets {
+		targetUrl := "https://github.com/" + target + "?tab=repositories"
+		repo, err := FetchRepositoryUrls(targetUrl)
+		if err != nil {
+			errs = append(errs, err)
+			continue
+		}
+		targetRepos[target] = repo
 	}
-	fmt.Printf("# repo found: %v\n", len(repositories))
-	return nil
+	return targetRepos, errs
 }
 
-func fetchRepositories(url string) ([]Repository, error) {
+func FetchRepositoryUrls(url string) ([]model.Repository, error) {
 	collector := colly.NewCollector()
 
 	collector.OnRequest(func(r *colly.Request) {
 		slog.Debug("Visiting page", slog.String("url", r.URL.String()))
 	})
 
-	var repos []Repository
+	var repos []model.Repository
 	collector.OnHTML("h3 a", func(e *colly.HTMLElement) {
-		repo := Repository{
-			url: e.Attr("href"),
+		repo := model.Repository{
+			Name: cleanString(e.Text),
+			Url:  e.Attr("href"),
 		}
 		repos = append(repos, repo)
 	})
@@ -39,7 +44,7 @@ func fetchRepositories(url string) ([]Repository, error) {
 	collector.OnHTML(".next_page", func(e *colly.HTMLElement) {
 		nextURL := e.Attr("href")
 		if nextURL != "" {
-			nextRepos, err := fetchRepositories("https://github.com" + nextURL)
+			nextRepos, err := FetchRepositoryUrls("https://github.com" + nextURL)
 			if err == nil {
 				repos = append(repos, nextRepos...)
 			}
@@ -52,4 +57,9 @@ func fetchRepositories(url string) ([]Repository, error) {
 	}
 
 	return repos, nil
+}
+
+func cleanString(s string) string {
+	tmp := strings.ReplaceAll(s, " ", "")
+	return strings.ReplaceAll(tmp, "\n", "")
 }
