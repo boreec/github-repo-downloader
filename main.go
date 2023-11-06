@@ -10,6 +10,10 @@ import (
 	"github.com/boreec/repo-downloader/repository"
 )
 
+const (
+	outputDirDefault = "cloned-repos"
+)
+
 func main() {
 	debug := flag.Bool("debug", false, "Show debugging messages")
 	dryRun := flag.Bool("dry-run", false, "Show fetched repository information")
@@ -42,7 +46,7 @@ func main() {
 
 	if !*dryRun {
 		slog.Info("cloning repositories")
-		errs = repository.SaveRepositoriesLocally(targetsRepos, "data")
+		errs = repository.SaveRepositoriesLocally(targetsRepos, outputDirDefault)
 		if len(errs) > 0 {
 			for _, err := range errs {
 				slog.Warn(err.Error())

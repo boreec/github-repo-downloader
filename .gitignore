@@ -1,2 +1,5 @@
 # executable file
 repo-downloader
+
+# default folder created for cloned repositories
+cloned-repos
