@@ -22,3 +22,10 @@ or user:
 ```sh
 ./repo-downloader user:boreec org:golang user:octocat org:rust-lang
 ```
+
+You can provide the flag `--dry-run` for displaying the fetchable repositories
+without actually cloning them:
+
+```sh
+./repo-downloader --dry-run user:octocat
+```
