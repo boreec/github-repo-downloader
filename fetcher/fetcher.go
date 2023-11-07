@@ -39,14 +39,24 @@ func FetchAll(targets []string) (
 	return targetRepos, errs
 }
 
-func FetchRepositoryUrls(url string) ([]model.Repository, error) {
+// Fetch all public repositories for a target
+//
+// Parameters:
+//   - url: the target repositories GitHub page.
+//
+// Returns:
+//   - repos: slice of repositories found for the target.
+//   - err: an error, if any, that occured in the process.
+func FetchRepositoryUrls(url string) (
+	repos []model.Repository,
+	err error,
+) {
 	collector := colly.NewCollector()
 
 	collector.OnRequest(func(r *colly.Request) {
 		slog.Debug("Visiting page", slog.String("url", r.URL.String()))
 	})
 
-	var repos []model.Repository
 	collector.OnHTML("h3 a", func(e *colly.HTMLElement) {
 		repo := model.Repository{
 			Name: utils.SanitizeString(e.Text),
@@ -66,7 +76,7 @@ func FetchRepositoryUrls(url string) ([]model.Repository, error) {
 		}
 	})
 
-	err := collector.Visit(url)
+	err = collector.Visit(url)
 	if err != nil {
 		return nil, err
 	}
