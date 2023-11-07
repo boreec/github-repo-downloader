@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-type TargetType string
+type CloningTargetType string
 
 const (
 	OrganizationTarget = "org"
@@ -13,12 +13,12 @@ const (
 )
 
 // Represents a GitHub user or organization.
-type Target struct {
+type CloningTarget struct {
 	Name string
-	Type TargetType
+	Type CloningTargetType
 }
 
-func ParseTarget(target string) (Target, error) {
+func ParseCloningTarget(target string) (CloningTarget, error) {
 	errWrongTargetFormat := fmt.Errorf(
 		"target '%s' is wrong format, it must be either '%s' or '%s'",
 		target,
@@ -28,26 +28,26 @@ func ParseTarget(target string) (Target, error) {
 	splits := strings.Split(target, ":")
 
 	if len(splits) != 2 {
-		return Target{}, errWrongTargetFormat
+		return CloningTarget{}, errWrongTargetFormat
 	}
 
 	switch splits[0] {
 	case OrganizationTarget:
-		return Target{
+		return CloningTarget{
 			Name: splits[1],
 			Type: OrganizationTarget,
 		}, nil
 	case UserTarget:
-		return Target{
+		return CloningTarget{
 			Name: splits[1],
 			Type: UserTarget,
 		}, nil
 	default:
-		return Target{}, errWrongTargetFormat
+		return CloningTarget{}, errWrongTargetFormat
 	}
 }
 
-func (t *Target) GetRepositoriesPageUrl() string {
+func (t *CloningTarget) GetRepositoriesPageUrl() string {
 	switch t.Type {
 	case UserTarget:
 		return "https://github.com/" + t.Name + "?tab=repositories"

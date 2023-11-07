@@ -18,11 +18,11 @@ import (
 // Returns:
 //   - targetRepos: user associated to their repositories.
 //   - errs: potential errors that occurred during fetching.
-func FetchAll(targets []model.Target) (
-	targetRepos map[model.Target][]model.Repository,
+func FetchAll(targets []model.CloningTarget) (
+	targetRepos map[model.CloningTarget][]model.Repository,
 	errs []error,
 ) {
-	targetRepos = make(map[model.Target][]model.Repository)
+	targetRepos = make(map[model.CloningTarget][]model.Repository)
 
 	for _, target := range targets {
 		targetUrl := target.GetRepositoriesPageUrl()

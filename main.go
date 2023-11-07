@@ -84,9 +84,9 @@ func main() {
 	os.Exit(0)
 }
 
-func parseArgs(args []string) (targets []model.Target, errs []error) {
+func parseArgs(args []string) (targets []model.CloningTarget, errs []error) {
 	for _, arg := range args {
-		target, err := model.ParseTarget(arg)
+		target, err := model.ParseCloningTarget(arg)
 		if err != nil {
 			errs = append(errs, err)
 			continue

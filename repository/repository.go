@@ -8,7 +8,7 @@ import (
 )
 
 func CloneAll(
-	targetRepos map[model.Target][]model.Repository,
+	targetRepos map[model.CloningTarget][]model.Repository,
 	dir string,
 ) (errs []error) {
 	for target, repos := range targetRepos {
