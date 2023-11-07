@@ -31,14 +31,14 @@ func main() {
 		logger.SetLoggerLevelToDebug()
 	}
 
-	targetsRepos, errs := fetcher.FetchAll(flag.Args())
+	fetchedRepos, errs := fetcher.FetchAll(flag.Args())
 	if len(errs) > 0 {
 		for _, err := range errs {
 			slog.Warn(err.Error())
 		}
 	}
 
-	for target, targetRepos := range targetsRepos {
+	for target, targetRepos := range fetchedRepos {
 		slog.Info("list of repositories found", slog.String("target", target))
 		for _, repo := range targetRepos {
 			slog.Info("", slog.String("url", repo.Url), slog.String("name", repo.Name))
@@ -46,8 +46,12 @@ func main() {
 	}
 
 	if !*dryRun {
+		if len(fetchedRepos) == 0 {
+			slog.Info("no repositories found!")
+			os.Exit(0)
+		}
 		slog.Info("cloning repositories")
-		errs = repository.CloneAll(targetsRepos, *outputDir)
+		errs = repository.CloneAll(fetchedRepos, *outputDir)
 		if len(errs) > 0 {
 			for _, err := range errs {
 				slog.Warn(err.Error())
