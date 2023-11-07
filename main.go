@@ -47,7 +47,7 @@ func main() {
 
 	if !*dryRun {
 		slog.Info("cloning repositories")
-		errs = repository.SaveRepositoriesLocally(targetsRepos, *outputDir)
+		errs = repository.CloneAll(targetsRepos, *outputDir)
 		if len(errs) > 0 {
 			for _, err := range errs {
 				slog.Warn(err.Error())
