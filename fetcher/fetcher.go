@@ -8,9 +8,20 @@ import (
 	"github.com/gocolly/colly"
 )
 
-func FetchAll(targets []string) (map[string][]model.Repository, []error) {
-	var errs []error
-	var targetRepos map[string][]model.Repository = make(map[string][]model.Repository)
+// Fetch all targets' repositories information (name, url, etc).
+//
+// Parameters:
+//   - targets: slice of github user/organization names with the format
+//   `user:user-name` or `org:organization-name`.
+//
+// Returns:
+//   - targetRepos: user associated to their repositories.
+//   - errs: potential errors that occured during fetching.
+func FetchAll(targets []string) (
+	targetRepos map[string][]model.Repository,
+	errs []error,
+) {
+	targetRepos = make(map[string][]model.Repository)
 
 	for _, target := range targets {
 		targetUrl, err := utils.DetermineTargetUrl(target)
