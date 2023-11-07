@@ -20,7 +20,9 @@ Specify the repositories to fetch for users or organization using the formats
 or user:
 
 ```sh
-./repo-downloader user:boreec org:golang user:octocat org:rust-lang
+./repo-downloader user:octocat # clone all repositories for user octocat
+./repo-downloader org:golang # clone all repositories for organization golang
+./repo-downloader org:golang org:rust-lang user:octocat # clone repositories for every specified target
 ```
 
 ## using flags
