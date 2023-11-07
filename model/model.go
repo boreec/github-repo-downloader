@@ -1,7 +1,10 @@
 package model
 
-// A repository hosted on GitHub
+// A repository hosted on GitHub.
 type Repository struct {
+	// Name of the repository.
 	Name string
-	Url  string
+
+	// Absolute Url to the repository's GitHub page.
+	Url string
 }
