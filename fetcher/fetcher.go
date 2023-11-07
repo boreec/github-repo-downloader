@@ -16,7 +16,7 @@ import (
 //
 // Returns:
 //   - targetRepos: user associated to their repositories.
-//   - errs: potential errors that occured during fetching.
+//   - errs: potential errors that occurred during fetching.
 func FetchAll(targets []string) (
 	targetRepos map[string][]model.Repository,
 	errs []error,
@@ -46,7 +46,7 @@ func FetchAll(targets []string) (
 //
 // Returns:
 //   - repos: slice of repositories found for the target.
-//   - err: an error, if any, that occured in the process.
+//   - err: an error, if any, that occurred in the process.
 func FetchRepositoryUrls(url string) (
 	repos []model.Repository,
 	err error,

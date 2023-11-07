@@ -19,9 +19,9 @@ func SanitizeString(s string) string {
 //
 // Returns:
 //   - url: the target's url for fetching repositories.
-//   - err: an errory, if any, that occured during the process.
+//   - err: an errory, if any, that occurred during the process.
 func DetermineTargetUrl(target string) (url string, err error) {
-	errWrongFromat := fmt.Errorf(
+	errWrongFormat := fmt.Errorf(
 		"target '%s' is wrong format, it must be either '%s' or '%s'",
 		target,
 		"'user:user-name'",
@@ -30,7 +30,7 @@ func DetermineTargetUrl(target string) (url string, err error) {
 
 	splits := strings.Split(target, ":")
 	if len(splits) != 2 {
-		return "", errWrongFromat
+		return "", errWrongFormat
 	}
 
 	switch splits[0] {
@@ -39,6 +39,6 @@ func DetermineTargetUrl(target string) (url string, err error) {
 	case "user":
 		return "https://github.com/" + splits[1] + "?tab=repositories", nil
 	default:
-		return "", errWrongFromat
+		return "", errWrongFormat
 	}
 }
