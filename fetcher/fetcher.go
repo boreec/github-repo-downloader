@@ -1,6 +1,7 @@
 package fetcher
 
 import (
+	"fmt"
 	"log/slog"
 
 	"github.com/boreec/repo-downloader/model"
@@ -26,12 +27,26 @@ func FetchAll(targets []string) (
 	for _, target := range targets {
 		targetUrl, err := utils.DetermineTargetUrl(target)
 		if err != nil {
-			errs = append(errs, err)
+			errs = append(
+				errs,
+				fmt.Errorf(
+					"failed to determine target url for target=%s %w",
+					target,
+					err,
+				),
+			)
 			continue
 		}
 		repo, err := FetchRepositoryUrls(targetUrl)
 		if err != nil {
-			errs = append(errs, err)
+			errs = append(
+				errs,
+				fmt.Errorf(
+					"failed to fetch target repository url for url=%s %w",
+					targetUrl,
+					err,
+				),
+			)
 			continue
 		}
 		targetRepos[target] = repo
