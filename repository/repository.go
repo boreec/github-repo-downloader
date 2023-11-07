@@ -8,11 +8,11 @@ import (
 )
 
 func CloneAll(
-	targetRepos map[string][]model.Repository,
+	targetRepos map[model.Target][]model.Repository,
 	dir string,
 ) (errs []error) {
 	for target, repos := range targetRepos {
-		targetDir := dir + "/" + target
+		targetDir := dir + "/" + target.Name
 		if err := os.MkdirAll(targetDir, 0755); err != nil {
 			errs = append(errs, err)
 			continue

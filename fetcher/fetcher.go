@@ -18,25 +18,14 @@ import (
 // Returns:
 //   - targetRepos: user associated to their repositories.
 //   - errs: potential errors that occurred during fetching.
-func FetchAll(targets []string) (
-	targetRepos map[string][]model.Repository,
+func FetchAll(targets []model.Target) (
+	targetRepos map[model.Target][]model.Repository,
 	errs []error,
 ) {
-	targetRepos = make(map[string][]model.Repository)
+	targetRepos = make(map[model.Target][]model.Repository)
 
 	for _, target := range targets {
-		targetUrl, err := utils.DetermineTargetUrl(target)
-		if err != nil {
-			errs = append(
-				errs,
-				fmt.Errorf(
-					"failed to determine target url for target=%s %w",
-					target,
-					err,
-				),
-			)
-			continue
-		}
+		targetUrl := target.GetRepositoriesPageUrl()
 		repo, err := FetchRepositoryUrls(targetUrl)
 		if err != nil {
 			errs = append(

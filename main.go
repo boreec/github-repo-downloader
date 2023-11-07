@@ -7,6 +7,7 @@ import (
 
 	"github.com/boreec/repo-downloader/fetcher"
 	"github.com/boreec/repo-downloader/logger"
+	"github.com/boreec/repo-downloader/model"
 	"github.com/boreec/repo-downloader/repository"
 )
 
@@ -31,7 +32,19 @@ func main() {
 		logger.SetLoggerLevelToDebug()
 	}
 
-	fetchedRepos, errs := fetcher.FetchAll(flag.Args())
+	targets, errs := parseArgs(flag.Args())
+	if len(errs) > 0 {
+		for _, err := range errs {
+			slog.Warn(err.Error())
+		}
+	}
+
+	if len(targets) == 0 {
+		slog.Error("no targets parsed")
+		os.Exit(1)
+	}
+
+	fetchedRepos, errs := fetcher.FetchAll(targets)
 	if len(errs) > 0 {
 		for _, err := range errs {
 			slog.Warn(err.Error())
@@ -39,7 +52,10 @@ func main() {
 	}
 
 	for target, targetRepos := range fetchedRepos {
-		slog.Info("list of repositories found", slog.String("target", target))
+		slog.Info(
+			"list of repositories found",
+			slog.String("name", target.Name),
+		)
 		for _, repo := range targetRepos {
 			slog.Info("", slog.String("url", repo.Url), slog.String("name", repo.Name))
 		}
@@ -66,4 +82,16 @@ func main() {
 		os.Exit(1)
 	}
 	os.Exit(0)
+}
+
+func parseArgs(args []string) (targets []model.Target, errs []error) {
+	for _, arg := range args {
+		target, err := model.ParseTarget(arg)
+		if err != nil {
+			errs = append(errs, err)
+			continue
+		}
+		targets = append(targets, target)
+	}
+	return targets, errs
 }
