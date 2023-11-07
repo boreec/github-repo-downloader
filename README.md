@@ -15,9 +15,11 @@ Build the program:
 go build -v
 ```
 
-Specify the repositories to fetch for users or organization using the formats
-`org:organization-name` or `user:user-name`. You can specify more than one org
-or user:
+To clone repositories, you can provide target names as command-line arguments.
+User the following formats:
+
+- For a GitHub user, use `user:user-name`.
+- For a GitHub organization, user `org:organization-name`.
 
 ```sh
 ./repo-downloader user:octocat # clone all repositories for user octocat
